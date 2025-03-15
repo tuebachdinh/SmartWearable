@@ -16,7 +16,8 @@ print(f"Listening for connections on port {PORT}...")
 client_socket, client_address = server_socket.accept()
 print(f"Connected to {client_address}")
 
-csv_filename = "sensor_data_raw.csv"
+csv_filename = "sensor_data_bicepcurl_1.csv"
+exercise_name = "OverHead"
 
 # Open CSV file to store sensor data
 with open(csv_filename, mode="w", newline="") as file:
@@ -55,7 +56,7 @@ with open(csv_filename, mode="w", newline="") as file:
                 sensor_values[3],  # Gyro_x
                 sensor_values[4],  # Gyro_y
                 sensor_values[5],  # Gyro_z
-                ""                 # Label (to fill later)
+                exercise_name      # Label (to fill later)
             ]
             writer.writerow(row)
             file.flush()  # Ensure data is written immediately
