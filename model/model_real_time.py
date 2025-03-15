@@ -44,7 +44,7 @@ def extract_features(window_df):
 # ---------------------------
 # Real-Time Classification Loop
 # ---------------------------
-print("Starting real-time classification. Perform your exercise and see the result!")
+print("Starting real-time classification")
 while True:
     # Read a line from serial (non-blocking)
     if ser.in_waiting:

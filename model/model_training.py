@@ -8,13 +8,13 @@ from joblib import dump
 # 1. Load and Label the Data Files
 # -------------------------------
 # Update the filenames if necessary.
-bicep = pd.read_csv("sensor_data_bicepcurl.csv", parse_dates=["Timestamp"])
+bicep = pd.read_csv("data/sensor_data_bicepcurl.csv", parse_dates=["Timestamp"])
 bicep["Label"] = "BicepCurl"
 
-overhead = pd.read_csv("sensor_data_overhead.csv", parse_dates=["Timestamp"])
+overhead = pd.read_csv("data/sensor_data_overhead.csv", parse_dates=["Timestamp"])
 overhead["Label"] = "OverHead"
 
-pushup = pd.read_csv("sensor_data_pushup.csv", parse_dates=["Timestamp"])
+pushup = pd.read_csv("data/sensor_data_pushup.csv", parse_dates=["Timestamp"])
 pushup["Label"] = "PushUp"
 
 # Combine the datasets
