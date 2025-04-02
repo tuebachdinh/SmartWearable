@@ -16,6 +16,8 @@ window_size = fs * window_size_sec  # e.g., 100 samples
 step_size = window_size // 2        # 50% overlap (e.g., 50 samples)
 sensor_cols = ["Acce_x", "Acce_y", "Acce_z", "Gyro_x", "Gyro_y", "Gyro_z"]
 
+trigger_times = 3
+
 # Load your pre-trained classification model
 model = load("model/exercise_model.joblib")
 
@@ -63,7 +65,7 @@ def extract_features(window_df):
 # ---------------------------
 # Video Playing Function
 # ---------------------------
-def play_video(video_path):
+def play_video(video_path, desired_size=640):
     cap = cv2.VideoCapture(video_path)
     if not cap.isOpened():
         print("Error: Could not open video", video_path)
@@ -72,12 +74,15 @@ def play_video(video_path):
         ret, frame = cap.read()
         if not ret:
             break
+        # Resize the frame to a fixed square size (e.g., 640x640)
+        frame = cv2.resize(frame, (desired_size, desired_size))
         cv2.imshow("Exercise Video", frame)
-        # Press 'q' to exit early, or let it run to completion
+        # Wait 25ms between frames; exit if 'q' is pressed
         if cv2.waitKey(25) & 0xFF == ord('q'):
             break
     cap.release()
     cv2.destroyWindow("Exercise Video")
+
 
 # ---------------------------
 # Real-Time Classification Loop
@@ -113,7 +118,7 @@ while True:
             prev_prediction = prediction
         
         # If the same prediction appears 5 times in a row, play the video
-        if consecutive_count >= 5:
+        if consecutive_count >= trigger_times:
             print("Consistent prediction detected. Playing video for:", prediction)
             if prediction in video_media:
                 play_video(video_media[prediction])
