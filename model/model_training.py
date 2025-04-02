@@ -9,16 +9,16 @@ from joblib import dump
 # -------------------------------
 # Update the filenames if necessary.
 bicep = pd.read_csv("data/sensor_data_bicepcurl.csv", parse_dates=["Timestamp"])
-bicep["Label"] = "BicepCurl"
-
+lateral = pd.read_csv("data/sensor_data_lateralraise.csv", parse_dates=["Timestamp"])
 overhead = pd.read_csv("data/sensor_data_overhead.csv", parse_dates=["Timestamp"])
-overhead["Label"] = "OverHead"
-
+plank = pd.read_csv("data/sensor_data_plank.csv", parse_dates=["Timestamp"])
+pull = pd.read_csv("data/sensor_data_pull.csv", parse_dates=["Timestamp"])
 pushup = pd.read_csv("data/sensor_data_pushup.csv", parse_dates=["Timestamp"])
-pushup["Label"] = "PushUp"
-
+tricep = pd.read_csv("data/sensor_data_tricepextension.csv", parse_dates=["Timestamp"])
+wrist = pd.read_csv("data/sensor_data_wristcurl.csv", parse_dates=["Timestamp"])
 # Combine the datasets
-data = pd.concat([bicep, overhead, pushup], ignore_index=True)
+data = pd.concat([bicep, overhead, pushup, lateral, plank, pull, tricep, wrist], ignore_index=True)
+
 data = data.sort_values("Timestamp").reset_index(drop=True)
 
 # -------------------------------
