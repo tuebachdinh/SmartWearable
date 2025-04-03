@@ -2,8 +2,11 @@
 #include <Adafruit_ICM20948.h>  // Use the ICM20948-specific header
 #include <SPI.h>
 #include <WiFiNINA.h>           // Or WiFi101, depending on your board
-#define PALM_SENSOR_PIN A1
-#define FINGER_SENSOR_PIN A2
+#define PALM_SENSOR_PIN A5
+#define FINGER1_SENSOR_PIN A1
+#define FINGER2_SENSOR_PIN A2
+#define FINGER3_SENSOR_PIN A3
+#define FINGER4_SENSOR_PIN A4
 
 // Define threshold values (adjust based on calibration)
 const int lowThreshold   = 600;  // Below this value, sensor is considered "low"
@@ -77,7 +80,11 @@ void loop() {
     icm.getEvent(&accel, &gyro, &temp, &mag);
 
     int palmValue = 1023 - analogRead(PALM_SENSOR_PIN);
-    int fingerValue = 1023 - analogRead(FINGER_SENSOR_PIN);
+    int fingerValue1 = 1023 - analogRead(FINGER1_SENSOR_PIN);
+    int fingerValue2 = 1023 - analogRead(FINGER2_SENSOR_PIN);
+    int fingerValue3 = 1023 - analogRead(FINGER3_SENSOR_PIN);
+    int fingerValue4 = 1023 - analogRead(FINGER4_SENSOR_PIN);
+    int fingerValue = (fingerValue1 + fingerValue2 + fingerValue3 + fingerValue4)/4
     String gridType;
     Serial.print(palmValue);
     Serial.print("\t");
@@ -100,7 +107,7 @@ void loop() {
     else {// If no condition is met, the grip is undefined or in transition.
       gridType = "Undetected";
     }
-
+    Serial.println("Grip Type: " + gridType);
     // Prepare CSV-like data string: Acce_x, Acce_y, Acce_z, Gyro_x, Gyro_y, Gyro_z
     String dataString = "";
     dataString += String(accel.acceleration.x) + ",";

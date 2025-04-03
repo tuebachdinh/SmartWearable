@@ -5,3 +5,5 @@ GND                  →   GND
 SCL                  →   SCL 
 SDA                  →   SDA 
 INT                  →   Not used (optional)
+
+
