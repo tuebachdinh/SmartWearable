@@ -2,19 +2,24 @@
 #include <Adafruit_ICM20948.h>  // Use the ICM20948-specific header
 #include <SPI.h>
 #include <WiFiNINA.h>           // Or WiFi101, depending on your board
+#define PALM_SENSOR_PIN A1
+#define FINGER_SENSOR_PIN A2
+
+// Define threshold values (adjust based on calibration)
+const int lowThreshold   = 600;  // Below this value, sensor is considered "low"
+const int moderateMin    = 600;  // Minimum for moderate pressure
+const int moderateMax    = 950;  // Maximum for moderate pressure
+const int highThreshold  = 960;  // Above this value, sensor is considered "high"
 
 /***** Wi-Fi Credentials *****/
-const char* ssid     = "yuuu";
-const char* password = "servin022";
+const char* ssid     = "aalto open";
+const char* password = "";
 
 /***** Server Details *****/
 const char* serverIP   = "192.168.10.58";  // Replace with your computer's local IP
 const int   serverPort = 5001;             // Must match the Python server script
 
-/***** Create ICM-20948 Object *****/
 Adafruit_ICM20948 icm;
-
-/***** Wi-Fi Client *****/
 WiFiClient client;
 
 bool sendData = true; // Flag to control data transmission
@@ -71,6 +76,31 @@ void loop() {
     sensors_event_t accel, gyro, temp, mag;
     icm.getEvent(&accel, &gyro, &temp, &mag);
 
+    int palmValue = 1023 - analogRead(PALM_SENSOR_PIN);
+    int fingerValue = 1023 - analogRead(FINGER_SENSOR_PIN);
+    String gridType;
+    Serial.print(palmValue);
+    Serial.print("\t");
+    Serial.println(fingerValue);
+    
+    // Determine grip type based on sensor thresholds
+    if (palmValue > moderateMin && palmValue < moderateMax && fingerValue < lowThreshold) {
+      gridType = "Open Grip";
+    }
+    else if ((palmValue >= moderateMin && palmValue <= moderateMax) && (fingerValue >= moderateMin && fingerValue <= moderateMax)) { 
+      // Both sensors are in the moderate range → Closed Grip (thumb in)
+      gridType = "Closed Grip";
+    }
+    else if (palmValue > highThreshold ) { // High pressure on palm, low on finger → Push Up (all palm down)
+      gridType = "Palm Down";
+    }
+    else if (fingerValue > highThreshold) {. // High pressure on finger, low on palm → Pinch Grip
+      gridType = "Pinch Grip";
+    }
+    else {// If no condition is met, the grip is undefined or in transition.
+      gridType = "Undetected";
+    }
+
     // Prepare CSV-like data string: Acce_x, Acce_y, Acce_z, Gyro_x, Gyro_y, Gyro_z
     String dataString = "";
     dataString += String(accel.acceleration.x) + ",";
@@ -79,8 +109,8 @@ void loop() {
     dataString += String(gyro.gyro.x) + ",";
     dataString += String(gyro.gyro.y) + ",";
     dataString += String(gyro.gyro.z);
-    // Optionally, include magnetometer data if needed:
-    // dataString += "," + String(mag.magnetic.x) + "," + String(mag.magnetic.y) + "," + String(mag.magnetic.z);
+    dataString += gridType;
+
 
     // Send data to the server
     client.println(dataString);
