@@ -16,8 +16,8 @@ print(f"Listening for connections on port {PORT}...")
 client_socket, client_address = server_socket.accept()
 print(f"Connected to {client_address}")
 
-csv_filename = "sensor_data_pull.csv"
-exercise_name = "Pull"
+csv_filename = "sensor_data_wristcurl.csv"
+exercise_name = "WristCurl"  # Change this to the desired exercise name
 
 # Open CSV file to store sensor data
 with open(csv_filename, mode="w", newline="") as file:

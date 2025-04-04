@@ -15,11 +15,11 @@ const int moderateMax    = 950;  // Maximum for moderate pressure
 const int highThreshold  = 960;  // Above this value, sensor is considered "high"
 
 /***** Wi-Fi Credentials *****/
-const char* ssid     = "aalto open";
-const char* password = "";
+const char* ssid     = "iPhone";
+const char* password = "phungxinhvl";
 
 /***** Server Details *****/
-const char* serverIP   = "192.168.10.58";  // Replace with your computer's local IP
+const char* serverIP   = "172.20.10.4";  // Replace with your computer's local IP
 const int   serverPort = 5001;             // Must match the Python server script
 
 Adafruit_ICM20948 icm;
@@ -84,11 +84,11 @@ void loop() {
     int fingerValue2 = 1023 - analogRead(FINGER2_SENSOR_PIN);
     int fingerValue3 = 1023 - analogRead(FINGER3_SENSOR_PIN);
     int fingerValue4 = 1023 - analogRead(FINGER4_SENSOR_PIN);
-    int fingerValue = (fingerValue1 + fingerValue2 + fingerValue3 + fingerValue4)/4
+    int fingerValue = (fingerValue1 + fingerValue2 + fingerValue3 + fingerValue4)/4;
     String gridType;
-    Serial.print(palmValue);
-    Serial.print("\t");
-    Serial.println(fingerValue);
+    // Serial.print(palmValue);
+    // Serial.print("\t");
+    // Serial.println(fingerValue);
     
     // Determine grip type based on sensor thresholds
     if (palmValue > moderateMin && palmValue < moderateMax && fingerValue < lowThreshold) {
@@ -101,13 +101,13 @@ void loop() {
     else if (palmValue > highThreshold ) { // High pressure on palm, low on finger → Push Up (all palm down)
       gridType = "Palm Down";
     }
-    else if (fingerValue > highThreshold) {. // High pressure on finger, low on palm → Pinch Grip
+    else if (fingerValue > highThreshold) { // High pressure on finger, low on palm → Pinch Grip
       gridType = "Pinch Grip";
     }
     else {// If no condition is met, the grip is undefined or in transition.
       gridType = "Undetected";
     }
-    Serial.println("Grip Type: " + gridType);
+    // Serial.println("Grip Type: " + gridType);
     // Prepare CSV-like data string: Acce_x, Acce_y, Acce_z, Gyro_x, Gyro_y, Gyro_z
     String dataString = "";
     dataString += String(accel.acceleration.x) + ",";
@@ -116,7 +116,7 @@ void loop() {
     dataString += String(gyro.gyro.x) + ",";
     dataString += String(gyro.gyro.y) + ",";
     dataString += String(gyro.gyro.z);
-    dataString += gridType;
+    // dataString += gridType;
 
 
     // Send data to the server

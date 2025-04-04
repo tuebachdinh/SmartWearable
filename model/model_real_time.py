@@ -16,7 +16,7 @@ window_size = fs * window_size_sec  # e.g., 100 samples
 step_size = window_size // 2        # 50% overlap (e.g., 50 samples)
 sensor_cols = ["Acce_x", "Acce_y", "Acce_z", "Gyro_x", "Gyro_y", "Gyro_z"]
 
-trigger_times = 3  # Number of consecutive identical predictions needed
+trigger_times = 5  # Number of consecutive identical predictions needed
 
 # Load your pre-trained classification model
 model = load("model/exercise_model.joblib")
@@ -98,9 +98,9 @@ while True:
             parts = line.split(',')
             # Expecting at least 7 parts: 6 sensor values + an extra value (e.g., grip) if available.
             # Here we only use the first 6 sensor values.
-            if len(parts) >= 7:
+            if len(parts) >= 6:
                 data_point = {sensor_cols[i]: float(parts[i]) for i in range(6)}
-                grid_type = parts[6]  # This is the extra value (e.g., grip)
+                # grid_type = parts[6]  # This is the extra value (e.g., grip)
                 buffer.append(data_point)
     except Exception as e:
         print("Error processing data:", e)
