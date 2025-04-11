@@ -1,9 +1,0 @@
-ICM-20948 Breakout   →   Arduino (MKR Wifi 1010)
---------------------------------
-VIN                  →   3.3V or 5V (check your board’s specs)
-GND                  →   GND
-SCL                  →   SCL 
-SDA                  →   SDA 
-INT                  →   Not used (optional)
-
-
