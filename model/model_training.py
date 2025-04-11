@@ -62,6 +62,7 @@ def extract_features(window):
     features["Label"] = window["Label"].mode()[0]
     return features
 
+feature_hand = "handGrip"
 features_list = []
 num_samples = len(data)
 for start in range(0, num_samples - window_size + 1, step_size):

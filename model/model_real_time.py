@@ -98,9 +98,9 @@ while True:
             parts = line.split(',')
             # Expecting at least 7 parts: 6 sensor values + an extra value (e.g., grip) if available.
             # Here we only use the first 6 sensor values.
-            if len(parts) >= 6:
+            if len(parts) >= 7:
                 data_point = {sensor_cols[i]: float(parts[i]) for i in range(6)}
-                # grid_type = parts[6]  # This is the extra value (e.g., grip)
+                grid_type = parts[6]  # This is the extra value (e.g., grip)
                 buffer.append(data_point)
     except Exception as e:
         print("Error processing data:", e)
@@ -110,9 +110,23 @@ while True:
         feat = extract_features(window_df)
         feature_vector = np.array(list(feat.values())).reshape(1, -1)
         # Feature_vector will contain the IMU values and the grid type
-        prediction = model.predict(feature_vector)[0]
+        # Before: prediction = model.predict(feature_vector)[0]
+
+        proba = model.predict_proba(feature_vector)[0]
+        max_prob = np.max(proba)
+        predicted_class = model.classes_[np.argmax(proba)]
+
+        if max_prob < 0.7:  # adjust threshold as needed
+            prediction = "Undetected"
+        else:
+            prediction = predicted_class
+
         print("Real-time Prediction:", prediction)
-        
+        if prediction == "Undetected":
+            print("No confident prediction — skipping video.")
+            consecutive_count = 0
+            continue
+
         # Update consecutive prediction count
         if prediction == prev_prediction:
             consecutive_count += 1

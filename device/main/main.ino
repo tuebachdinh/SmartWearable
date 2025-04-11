@@ -10,8 +10,8 @@
 
 // Define threshold values (adjust based on calibration)
 const int lowThreshold   = 600;  // Below this value, sensor is considered "low"
-const int moderateMin    = 600;  // Minimum for moderate pressure
-const int moderateMax    = 950;  // Maximum for moderate pressure
+const int moderateMin    = 700;  // Minimum for moderate pressure
+const int moderateMax    = 850;  // Maximum for moderate pressure
 const int highThreshold  = 960;  // Above this value, sensor is considered "high"
 
 /***** Wi-Fi Credentials *****/
@@ -116,7 +116,7 @@ void loop() {
     dataString += String(gyro.gyro.x) + ",";
     dataString += String(gyro.gyro.y) + ",";
     dataString += String(gyro.gyro.z);
-    // dataString += gridType;
+    dataString += gridType;
 
 
     // Send data to the server

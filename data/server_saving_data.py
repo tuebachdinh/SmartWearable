@@ -26,7 +26,7 @@ with open(csv_filename, mode="w", newline="") as file:
     writer.writerow([
         "Timestamp",
         "Acce_x", "Acce_y", "Acce_z",
-        "Gyro_x", "Gyro_y", "Gyro_z",
+        "Gyro_x", "Gyro_y", "Gyro_z", "handGrip"
         "Label"
     ])
 
@@ -40,7 +40,7 @@ with open(csv_filename, mode="w", newline="") as file:
             # Split incoming string into columns
             # data should look like: "Ax,Ay,Az,Gx,Gy,Gz"
             sensor_values = data.split(",")
-            if len(sensor_values) != 6:
+            if len(sensor_values) < 7:
                 # Invalid data format, skip
                 continue
 
@@ -56,6 +56,7 @@ with open(csv_filename, mode="w", newline="") as file:
                 sensor_values[3],  # Gyro_x
                 sensor_values[4],  # Gyro_y
                 sensor_values[5],  # Gyro_z
+                sensor_values[6],  # handGrip
                 exercise_name      # Label (to fill later)
             ]
             writer.writerow(row)
